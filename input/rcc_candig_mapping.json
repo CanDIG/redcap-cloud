@@ -20,8 +20,8 @@
 "enrollment_items": {
 	"scr_centre_name": "treatingCentreName",
 	"scr_centre_prov": "treatingCentreProvince",
-	"scr_ref_onc_lastname": "referringPhysicianContact",
-	"scr_ref_onc_contact": "referringPhysicianName",
+	"scr_ref_onc_lastname": "referringPhysicianName",
+	"scr_ref_onc_contact": "referringPhysicianContact",
 	"scr_prim_onc_lastname": "primaryOncologistName",
 	"scr_elig_age": "ageAtEnrollment",
 	"scr_elig_cat": "eligibilityCategory",

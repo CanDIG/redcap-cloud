@@ -11,7 +11,6 @@ Options:
 import requests
 import json
 from docopt import docopt
-import candig_tables as ct
 
 site_list = [1482, 1490, 1485, 1481, 1483]  # BC, Alberta, Sask, Manitoba
 # site_list = [1478, 1496, 1489, 1476, 1497, 1477, 1491, 1479, 1484] # Ontario, PEI, NL
@@ -98,7 +97,7 @@ def main():
 
 
 def parse_patient(patient_records, patient_id):
-	patient_table = ct.patients.copy()
+	patient_table = {}
 	patient_table["patientId"] = patient_id
 
 	for record in patient_records:
@@ -108,7 +107,7 @@ def parse_patient(patient_records, patient_id):
 	return patient_table, {}
 
 def parse_enrollment(patient_records, patient_id):
-	enrollment_table = ct.enrollments.copy()
+	enrollment_table = {}
 	enrollment_table["patientId"] = patient_id
 
 	for record in patient_records:
@@ -118,7 +117,7 @@ def parse_enrollment(patient_records, patient_id):
 	return {}, {}
 
 def parse_consent(patient_records, patient_id):
-	consent_table = ct.consents.copy()
+	consent_table = {}
 	consent_table["patientId"] = patient_id
 
 	for record in patient_records:
@@ -127,7 +126,7 @@ def parse_consent(patient_records, patient_id):
 	return {}, {}
 
 def parse_diagnosis(patient_records, patient_id, index):
-	diagnosis_table = ct.diagnoses.copy()
+	diagnosis_table = {}
 	diagnosis_table["patientId"] = patient_id
 
 	for record in patient_records:
@@ -137,7 +136,7 @@ def parse_diagnosis(patient_records, patient_id, index):
 	return {}, {}
 
 def parse_treatment(patient_records, patient_id, index):
-	treatment_table = ct.treatments.copy()
+	treatment_table = {}
 	treatment_table["patientId"] = patient_id
 	treatment_table["treatmentPlanId"] = patient_id+"_tx"+str(index)
 
@@ -148,7 +147,7 @@ def parse_treatment(patient_records, patient_id, index):
 	return {}, {}
 
 def parse_outcome(patient_records, patient_id):
-	outcome_table = ct.outcomes.copy()
+	outcome_table = {}
 	outcome_table["patientId"] = patient_id
 
 	for record in patient_records:
@@ -157,7 +156,7 @@ def parse_outcome(patient_records, patient_id):
 	return {}, {}
 
 def parse_complication(patient_records, patient_id):
-	complication_table = ct.complications.copy()
+	complication_table = {}
 	complication_table["patientId"] = patient_id
 
 	for record in patient_records:
@@ -166,7 +165,7 @@ def parse_complication(patient_records, patient_id):
 	return {}, {}
 
 def parse_tumourboard(patient_records, patient_id, index):
-	tumourboard_table = ct.tumourboards.copy()
+	tumourboard_table = {}
 	tumourboard_table["patientId"] = patient_id
 
 	for record in patient_records:
@@ -220,7 +219,7 @@ def redcap_transform(record, table_dict, table_str):
 				response_set = record_item["responseSet"]
 				mapped_item_value = [d["optionsText"] for d in response_set["responseSetValues"] if d["value"] == item_value]
 				if len(mapped_item_value) > 0:
-					if table_dict[mapped_field] == "":
+					if not table_dict.get(mapped_field):
 						table_dict[mapped_field] = mapped_item_value[0]
 					else:
 						if mapped_item_value[0] not in table_dict[mapped_field]:

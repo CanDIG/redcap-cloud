@@ -16,8 +16,6 @@ from docopt import docopt
 import openpyxl as pyxl
 import json
 
-TOTAL_FIELD_COUNT = 232
-
 def format_fieldname(field):
 	field = str(field).lower()
 	split_field = field.split(" ")
@@ -46,7 +44,7 @@ def load_tiers():
 	else:
 		raise ValueError('invalid metadata type')
 
-	for row in sheet.iter_rows(min_row=2, max_row=TOTAL_FIELD_COUNT+2):
+	for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row):
 		table = row[0].value[6:]
 		field = row[2].value
 		field = format_fieldname(field)

@@ -17,17 +17,17 @@ site_list = [1482, 1490, 1485, 1481, 1483]  # BC, Alberta, Sask, Manitoba
 # site_list = [1478, 1496, 1489, 1476, 1497, 1477, 1491, 1479, 1484] # Ontario, PEI, NL
 # site_list = [1480, 1487, 1486, 1488] # Quebec
 
+with open('input/rcc_candig_mapping.json') as json_data:
+	template = json.load(json_data)
+
 def main():
 	args = docopt(__doc__, version='0.1')
 	access_token = args['<access_token>']
 
 	export_uri = 'https://ucalgary.calogin.redcapcloud.com/rest/v2/export/records/{}'
-	singleton_tables = [{"Patient":parse_patient}, {"Enrollment":parse_enrollment}, {"Consent":parse_consent}, 
-				  {"Outcome":parse_outcome}, {"Complication": parse_complication}]
-	repeating_tables = [{"Tumourboard": parse_tumourboard}, {"Diagnosis":parse_diagnosis}, {"Treatment": parse_treatment}]
-
-	with open('input/rcc_candig_mapping.json') as json_data:
-   		template = json.load(json_data)
+	singleton_tables = [{"Patient": parse_patient}, {"Enrollment": parse_enrollment}, {"Consent": parse_consent}, 
+				  {"Outcome": parse_outcome}, {"Complication": parse_complication}]
+	repeating_tables = [{"Tumourboard": parse_tumourboard}, {"Diagnosis": parse_diagnosis}, {"Treatment": parse_treatment}]
 
    	results = {"metadata": []}
 
@@ -67,7 +67,7 @@ def main():
 
 					# singleton tables entered as group objects
 					for table in singleton_tables:
-						parsed_record = table.values()[0](patient_records, template, patient_id)
+						parsed_record, sub_tables = table.values()[0](patient_records, patient_id)
 						if parsed_record:
 							patient_obj[table.keys()[0]] = parsed_record
 					results["metadata"].append(patient_obj)
@@ -75,13 +75,16 @@ def main():
 					# repeating tables entered as individual objects
 					for table in repeating_tables:
 						index = 1
-						parsed_record = table.values()[0](patient_records, template, patient_id, index)
+						parsed_record, sub_tables = table.values()[0](patient_records, patient_id, index)
 						while(parsed_record):
-							individual_obj = {}
-							individual_obj[table.keys()[0]] = parsed_record
-							results["metadata"].append(individual_obj)
+							results["metadata"].append({table.keys()[0]: parsed_record})
+							# attach treatment sub tables
+							if table.keys()[0] == "Treatment":
+								for table_name, v in sub_tables.iteritems():
+									for k, rec in v.iteritems():
+										results["metadata"].append({table_name: rec})
 							index = index + 1
-							parsed_record = table.values()[0](patient_records, template, patient_id, index)
+							parsed_record, sub_tables = table.values()[0](patient_records, patient_id, index)
 			else:
 				print_error(response)
 
@@ -94,81 +97,101 @@ def main():
 		raise requests.exceptions.ConnectionError
 
 
-def parse_patient(patient_records, template, patient_id):
+def parse_patient(patient_records, patient_id):
 	patient_table = ct.patients.copy()
 	patient_table["patientId"] = patient_id
 
 	for record in patient_records:
 		if record.get("eventName") == "Enrollment":
-			return redcap_transform(record, template, patient_table, "patient")
+			return redcap_transform(record, patient_table, "patient")
 	# at minimum, an empty patient table with id must be returned
-	return patient_table
+	return patient_table, {}
 
-def parse_enrollment(patient_records, template, patient_id):
+def parse_enrollment(patient_records, patient_id):
 	enrollment_table = ct.enrollments.copy()
 	enrollment_table["patientId"] = patient_id
 
 	for record in patient_records:
 		# note, scr has no event name associated when exporting
 		if "eventName" not in record:
-			return redcap_transform(record, template, enrollment_table, "enrollment")
+			return redcap_transform(record, enrollment_table, "enrollment")
+	return {}, {}
 
-def parse_consent(patient_records, template, patient_id):
+def parse_consent(patient_records, patient_id):
 	consent_table = ct.consents.copy()
 	consent_table["patientId"] = patient_id
 
 	for record in patient_records:
 		if record.get("eventName") == "Enrollment":
-			return redcap_transform(record, template, consent_table, "consent")
+			return redcap_transform(record, consent_table, "consent")
+	return {}, {}
 
-def parse_diagnosis(patient_records, template, patient_id, index):
+def parse_diagnosis(patient_records, patient_id, index):
 	diagnosis_table = ct.diagnoses.copy()
 	diagnosis_table["patientId"] = patient_id
 
 	for record in patient_records:
 		# Repeating CRF event
 		if record.get("eventName") == "Diagnostic Information({})".format(index):
-			return redcap_transform(record, template, diagnosis_table, "diagnosis")
+			return redcap_transform(record, diagnosis_table, "diagnosis")
+	return {}, {}
 
-def parse_treatment(patient_records, template, patient_id, index):
-    treatment_table = ct.treatments.copy()
-    treatment_table["patientId"] = patient_id
+def parse_treatment(patient_records, patient_id, index):
+	treatment_table = ct.treatments.copy()
+	treatment_table["patientId"] = patient_id
+	treatment_table["treatmentPlanId"] = patient_id+"_tx"+str(index)
 
-    for record in patient_records:
-    	# Repeating CRF event
+	for record in patient_records:
+		# Repeating CRF event
 		if record.get("eventName") == "Treatment Plan({})".format(index):
-			return redcap_transform(record, template, treatment_table, "treatment")
+			return redcap_transform(record, treatment_table, "treatment")
+	return {}, {}
 
-def parse_outcome(patient_records, template, patient_id):
+def parse_outcome(patient_records, patient_id):
 	outcome_table = ct.outcomes.copy()
 	outcome_table["patientId"] = patient_id
 
 	for record in patient_records:
 		if record.get("eventName") == "Vital Status and Clinical Follow-Up":
-			return redcap_transform(record, template, outcome_table, "outcome")
+			return redcap_transform(record, outcome_table, "outcome")
+	return {}, {}
 
-def parse_complication(patient_records, template, patient_id):
+def parse_complication(patient_records, patient_id):
 	complication_table = ct.complications.copy()
 	complication_table["patientId"] = patient_id
 
 	for record in patient_records:
 		if record.get("eventName") == "Vital Status and Clinical Follow-Up":
-			return redcap_transform(record, template, complication_table, "complication")
+			return redcap_transform(record, complication_table, "complication")
+	return {}, {}
 
-def parse_tumourboard(patient_records, template, patient_id, index):
+def parse_tumourboard(patient_records, patient_id, index):
 	tumourboard_table = ct.tumourboards.copy()
 	tumourboard_table["patientId"] = patient_id
 
 	for record in patient_records:
 		# Repeating CRF	event
 		if record.get("eventName") == "Molecular Tumour Board({})".format(index):
-			return redcap_transform(record, template, tumourboard_table, "tumourboard")
+			return redcap_transform(record, tumourboard_table, "tumourboard")
+	return {}, {}
 
-
-def redcap_transform(record, template, table_dict, table_str):
+def redcap_transform(record, table_dict, table_str):
+	"""
+	Parses a record for a single patient id for a single table type
+	note: 'treatments' table is subparsed into an additonal list of treatment table types 
+	return: record for a specific table and sub table collection (treatments)
+	"""
 	for field in template.get(table_str, []):
 		table_dict[template[table_str][field]] = record.get(field)
 	record_items = record.get("items")
+
+	sub_tables = dict(
+		Chemotherapy = {},
+		Radiotherapy = {},
+		Surgery = {},
+		Immunotherapy = {},
+		CellTransplant = {}
+	)
 
 	for record_item in record_items:
 		item_value = record_item["itemValue"]
@@ -182,6 +205,7 @@ def redcap_transform(record, template, table_dict, table_str):
 
 		elif all(x in item_name for x in "()"):
 			# handles repeating fields in CRF
+			item_num = item_name.split("(", 1)[1].split(")")[0]
 			item_name = item_name.split("(")[0]
 
 		elif item_name.startswith("id_") and "id_relat" not in item_name:
@@ -201,7 +225,26 @@ def redcap_transform(record, template, table_dict, table_str):
 					else:
 						if mapped_item_value[0] not in table_dict[mapped_field]:
 							table_dict[mapped_field] = table_dict[mapped_field] + ", " + mapped_item_value[0]
-	return table_dict
+
+		# generate treatment sub tables
+		if table_str == "treatment":
+			for tx_table in ["Surgery", "Chemotherapy", "Radiotherapy", "Immunotherapy", "CellTransplant"]:
+				tx_str = tx_table.lower()
+				if item_name in template[tx_str+"_items"]:
+					mapped_field = template[tx_str+"_items"][item_name]
+					if "responseSet" not in record_item:
+						if item_num not in sub_tables[tx_table]:
+							sub_tables[tx_table][item_num] = {"treamentPlanId": table_dict["treamentPlanId"]}	
+						sub_tables[tx_table][item_num][mapped_field] = item_value
+					else:
+						response_set = record_item["responseSet"]
+						mapped_item_value = [d["optionsText"] for d in response_set["responseSetValues"] if d["value"] == item_value]
+						if len(mapped_item_value) > 0:
+							if item_num not in sub_tables[tx_table]:
+								sub_tables[tx_table][item_num] = {}	
+							sub_tables[tx_table][item_num][mapped_field] = mapped_item_value[0]
+
+	return table_dict, sub_tables
 
 def validate_connection(headers):
 	connected = False

@@ -1,7 +1,7 @@
 {
 "patient":{
 	"participantId": "patientId"
-},
+	},
 "patient_items" : {
 	"dem_pt_dob": "dateOfBirth",
 	"dem_pt_sex": "gender",
@@ -16,7 +16,7 @@
 	"ci_hx_other_comorbidity": "otherGeneticConditionOrSignificantComorbidity",
 	"ci_hx_cancer_dx": "priorMalignancy",
 	"ci_hx_dx_dat": "dateOfPriorMalignancy"
-},
+	},
 "enrollment_items": {
 	"scr_centre_name": "treatingCentreName",
 	"scr_centre_prov": "treatingCentreProvince",
@@ -26,10 +26,10 @@
 	"scr_elig_age": "ageAtEnrollment",
 	"scr_elig_cat": "eligibilityCategory",
 	"scr_summary": "summaryOfIdRequest"
-},
+	},
 "enrollment": {
 	"participantEnrollmentDate": "enrollmentApprovalDate"
-},
+	},
 "consent_items":{
 	"cst_dat": "consentDate",
 	"cst_activities": "patientConsentedTo",
@@ -45,7 +45,7 @@
 	"cst_bank_name": "nameOfOtherBiobank",
 	"consent_complete": "consentFormComplete",
 	"oncol_lastname": "consentingCoordinatorName"
-},
+	},
 "diagnosis_items": {
 	"dx_dat": "diagnosisDate",
 	"dx_age": "ageAtDiagnosis",
@@ -60,7 +60,7 @@
 	"dx_metsites": "sitesOfMetastases",
 	"dx_stagesyst": "stagingSystem",
 	"dx_stage": "specificTumorStageAtDiagnosis"
- },
+ 	},
  "treatment_items": {
  	"tx_plan_type": "treatmentPlanType",
  	"tx_plan_intent": "treatmentIntent",
@@ -70,26 +70,21 @@
  	"tx_plan_stop_dat": "stopDate",
  	"tx_plan_stop_why": "reasonForEndingTheTreatment",
  	"tx_resp_prog_dat": "dateOfRecurrenceOrProgressionAfterThisTreatment",
- 	"surg_dat": "surgeryDetails",
- 	"surg_site":"surgeryDetails",
- 	"surg_extent":"surgeryDetails",
- 	"tx_drug_nam": "drugListOrAgent",
- 	"tx_otherdrug_nam": "drugIdNumbers",
  	"tx_resp_type": "responseToTreatment",
  	"tx_resp_crit": "responseCriteriaUsed"
- },
+ 	},
  "outcome_items": {
  	"fu_dat": "dateOfAssessment",
  	"fu_ht": "height",
  	"fu_wt": "weight",
  	"fu_mrd_status": "minimalResidualDiseaseAssessment",
  	"fu_progsite": "sitesOfAnyProgressionOrRecurrence"
- },
+ 	},
  "complication_items": {
  	"fu_complic_dat": "date",
  	"fu_complic_typ": "lateComplicationOfTherapyDeveloped",
  	"fu_secondtum_dx": "suspectedTreatmentInducedNeoplasmDeveloped"
- },
+ 	},
  "tumourboard_items": {
  	"mtb_dat": "dateOfMolecularTumorBoard",
  	"mtb_smpltyp_som": "typeOfTumourSampleAnalyzed",
@@ -100,7 +95,7 @@
  	"mtb_germ_yn": "hasAGermlineVariantBeenIdentifiedByProfilingThatMayPredisposeToCancer",
  	"mtb_actionable_target_type": "actionableTargetFound",
  	"mtb_notes": "molecularTumorBoardRecommendation"
- },
+ 	},
  "sample_items": {
  	"bi_smpl_id": "sampleId",
  	"bi_smpl_alias": "localBiobankId",
@@ -117,5 +112,32 @@
  	"bi_smpl_perc_tumor": "estimatedTumorContent",
  	"bi_smpl_quant": "quantity",
  	"bi_smpl_unit": "units"
- }
+	},
+"chemotherapy_items": {
+	"tx_drug_nam": "systematicTherapyAgentName",
+	"tx_otherdrug_name": "systematicTherapyAgentName"
+	},
+"radiotherapy_items": {
+	"tx_rd_type": "radiationType",
+	"tx_rd_site": "radiationSite",
+	"tx_rd_totdose": "totalDose",
+	"tx_rd_bstsite": "boostSite",
+	"tx_rd_bstdose": "boostDose"
+	},
+"surgery_items": {
+	"surg_dat": "startDate",
+ 	"surg_site":"site"
+	},
+"celltransplant_items": {
+	"tx_hm_transplant_dat": "date",
+	"tx_hm_cellsource": "cellSource",
+	"tx_hm_grafttype": "donorType",
+	"tx_hm_grafttype_oth": "donorType"
+	},
+"immunotherapy_items": {
+	"tx_im_dat": "date",
+	"tx_im_type": "immunotherapyType",
+	"tx_im_target": "immunotherapyTarget",
+	"tx_im_detail": "immunotherapyDetail"
+	}
 }

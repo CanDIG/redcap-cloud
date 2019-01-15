@@ -1,26 +1,25 @@
 """
 Usage:
-	rcc_candig.py <access_token>
+	rcc_candig.py <alpha_code> <access_token>
 
 Options:
 	-h --help 		Show this screen
 	-v --version 	Version
+	<alpha_code>	Internationally approved alpha code (e.g. BC)
 	<access_token>	Your issued RedCapCloud api token  
 """
 
 import requests
+import exceptions
 import json
 from docopt import docopt
-
-site_list = [1482, 1490, 1485, 1481, 1483]  # BC, Alberta, Sask, Manitoba
-# site_list = [1478, 1496, 1489, 1476, 1497, 1477, 1491, 1479, 1484] # Ontario, PEI, NL
-# site_list = [1480, 1487, 1486, 1488] # Quebec
 
 with open('input/rcc_candig_mapping.json') as json_data:
 	template = json.load(json_data)
 
 def main():
 	args = docopt(__doc__, version='0.1')
+	alpha_code = args['<alpha_code>']
 	access_token = args['<access_token>']
 
 	export_uri = 'https://ucalgary.calogin.redcapcloud.com/rest/v2/export/records/{}'
@@ -37,6 +36,8 @@ def main():
 
 	if validate_connection(headers):
 		print('>>> Connection to REDCap accepted')
+		site_list = get_sites_for_prov(alpha_code)
+
 		for site_id in site_list:
 
 			response = requests.Session().get(
@@ -87,11 +88,13 @@ def main():
 			else:
 				print_error(response)
 
-		output = 'output/profyle_metadata.json'
-		with open(output, 'w') as outfile:
-			json.dump(results, outfile)
-		print('>>> Output to: {}'.format(output))
-
+		if site_list:
+			output = 'output/profyle_metadata.json'
+			with open(output, 'w') as outfile:
+				json.dump(results, outfile)
+			print('>>> Output to: {}'.format(output))
+		else:
+			raise exceptions.RuntimeError("No sites found. Please check the given provincial alpha code")
 	else:
 		raise requests.exceptions.ConnectionError
 
@@ -260,8 +263,21 @@ def validate_connection(headers):
 def print_error(response):
 	print('>>> {0}: {1}\n'.format(response.status_code, response.content))
 
+def get_sites_for_prov(alpha_code):
+	"""
+	Returns list of site ID's that belong to a province's access range
+	"""
+	site_list = []
+	code = alpha_code.lower()
+	if code in ['bc', 'ab', 'sk', 'mb']:
+		site_list = [1482, 1490, 1485, 1481, 1483]
+	elif code in ['on']:
+		site_list = [1478, 1489, 1477, 1491, 1479, 1484]
+	elif code in ['qc', 'pe', 'nl', 'ns', 'nb']:
+		site_list = [1480, 1487, 1486, 1488, 1496, 1476, 1497]
+	return site_list
 
-def get_sites(headers):
+def get_sites_all(headers):
 	"""
 	Returns list of all site ID's that a given token has access to
 	"""

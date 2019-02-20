@@ -36,13 +36,14 @@ def load_tiers():
 	with open(json_file) as f:
 		data = json.load(f)
 
-	# TODO: pipeline metadata uses a different key...
 	if metadata_type == 'clinical':
-		dataset = data['metadata']
+		label_key = 'metadata'
 	elif metadata_type == 'pipeline':
-		dataset = data['pipeline_metadata']
+		label_key = 'pipeline_metadata'
 	else:
-		raise ValueError('invalid metadata type')
+		raise ValueError('Invalid metadata type')
+
+	dataset = data[label_key]
 
 	for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row):
 		table = row[0].value[6:]
@@ -54,7 +55,7 @@ def load_tiers():
 			if table in entry:
 				entry[table][field+'Tier'] = tier
 
-	data['metadata'] = dataset
+	data[label_key] = dataset
 	with open(output, 'w') as outfile:
 		json.dump(data, outfile)
 

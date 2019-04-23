@@ -18,7 +18,7 @@
 	"ci_hx_dx_dat": "dateOfPriorMalignancy"
 	},
 "enrollment_items": {
-	"scr_centre_name": "treatingCentreName",
+	"scr_centre_site": "treatingCentreName",
 	"scr_centre_prov": "treatingCentreProvince",
 	"scr_ref_onc_lastname": "referringPhysicianName",
 	"scr_ref_onc_contact": "referringPhysicianContact",

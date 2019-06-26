@@ -57,7 +57,7 @@ def main():
                 sort_response = {}
                 for record in response.json():
                     patient_id = record.get("participantId")
-                    if patient_id == "":
+                    if not patient_id:
                         continue
                     if patient_id in sort_response:
                         sort_response[patient_id].append(record)

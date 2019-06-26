@@ -10,7 +10,7 @@
 if [ ${#@} == 2 ]; then
 	if [ ! -d rcc_venv/ ]; then
 		echo "No environment detected, initialising..."
-		virtualenv rcc_venv
+		python3 -m venv rcc_venv/
 		source rcc_venv/bin/activate
 		pip install --upgrade pip
 		pip install -U setuptools

@@ -239,7 +239,7 @@ def redcap_transform(record, table_dict, table_str):
                     mapped_field = template[tx_str+"_items"][item_name]
                     if "responseSet" not in record_item:
                         if item_num not in sub_tables[tx_table]:
-                            sub_tables[tx_table][item_num] = {"treamentPlanId": table_dict["treamentPlanId"]}    
+                            sub_tables[tx_table][item_num] = {"treatmentPlanId": table_dict["treatmentPlanId"]}    
                         sub_tables[tx_table][item_num][mapped_field] = item_value
                     else:
                         response_set = record_item["responseSet"]

@@ -1,6 +1,6 @@
 {
 "patient":{
-	"participantId": "patientId"
+	"participant_id": "patientId"
 	},
 "patient_items" : {
 	"dem_pt_dob": "dateOfBirth",
@@ -15,7 +15,8 @@
 	"ci_hx_expos_notes": "occupationalOrEnvironmentalExposure",
 	"ci_hx_other_comorbidity": "otherGeneticConditionOrSignificantComorbidity",
 	"ci_hx_cancer_dx": "priorMalignancy",
-	"ci_hx_dx_dat": "dateOfPriorMalignancy"
+	"ci_hx_dx_dat": "dateOfPriorMalignancy",
+	"vit_death_dt": "dateOfDeath"
 	},
 "enrollment_items": {
 	"scr_centre_site": "treatingCentreName",

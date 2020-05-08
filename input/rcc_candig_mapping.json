@@ -126,7 +126,8 @@
  	"bi_smpl_sop_deviat": "ifNotExplainAnyDeviation",	
  	"bi_smpl_perc_tumor": "estimatedTumorContent",
  	"bi_smpl_quant": "quantity",
- 	"bi_smpl_unit": "units"
+ 	"bi_smpl_unit": "units",
+	"dx_icdo_m": "morphologicalCode" 
 	},
 "chemotherapy_items": {
 	"tx_drug_nam": "systematicTherapyAgentName",

@@ -16,7 +16,8 @@
 	"ci_hx_other_comorbidity": "otherGeneticConditionOrSignificantComorbidity",
 	"ci_hx_cancer_dx": "priorMalignancy",
 	"ci_hx_dx_dat": "dateOfPriorMalignancy",
-	"vit_death_dt": "dateOfDeath"
+	"vit_death_dt": "dateOfDeath",
+	"vit_death_cause": "causeOfDeath"
 	},
 "enrollment_items": {
 	"scr_centre_site": "treatingCentreName",
@@ -79,7 +80,11 @@
  	"fu_ht": "height",
  	"fu_wt": "weight",
  	"fu_mrd_status": "minimalResidualDiseaseAssessment",
- 	"fu_progsite": "sitesOfAnyProgressionOrRecurrence"
+ 	"fu_progsite": "sitesOfAnyProgressionOrRecurrence",
+	"ECOG": "performanceStatus",
+	"KPS": "performanceStatus",
+	"fu_seerstage": "summaryStage",
+	"vit_status": "vitalStatus"
  	},
  "complication_items": {
  	"fu_complic_dat": "date",
@@ -95,7 +100,16 @@
  	"mtb_dcomp": "diseaseExpressionComparator",
  	"mtb_germ_yn": "hasAGermlineVariantBeenIdentifiedByProfilingThatMayPredisposeToCancer",
  	"mtb_actionable_target_type": "actionableTargetFound",
- 	"mtb_notes": "molecularTumorBoardRecommendation"
+ 	"mtb_notes": "molecularTumorBoardRecommendation",
+	"mtb_exprs_action_class": "levelOfEvidenceForExpressionTargetAgentMatch",
+	"mtb_gvar_action_class": "classificationOfVariants",
+	"mtb_gvar_name": "germlineSnvDiscussed",
+	"mtb_gvar_agent_class_oth": "agentOrDrugClass",
+	"mtb_gvar_agent_drug_class": "agentOrDrugClass",
+	"mtb_svar_action_class": "classificationOfVariants",
+	"mtb_svar_agent_class_oth": "agentOrDrugClass",
+	"mtb_svar_agent_drug_class": "agentOrDrugClass",
+	"mtb_svar_name": "somaticSnvDiscussed"
  	},
  "sample_items": {
  	"bi_smpl_id": "sampleId",

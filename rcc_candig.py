@@ -69,14 +69,11 @@ def main():
                     patient_obj = {}
 
                     # check if the records associated with current patient_id is has the correct consent
-
                     consent_bool = get_consent(patient_records, patient_id)
 
                     if consent_bool is False:
                         print(patient_id, "does not have acceptable consents, skipping...")
                         continue
-                    else:
-                        print(patient_id, "contains valid consents")
 
                     # singleton tables entered as group objects
                     for table in singleton_tables:

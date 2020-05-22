@@ -68,6 +68,16 @@ def main():
                     patient_records = sort_response[patient_id]
                     patient_obj = {}
 
+                    # check if the records associated with current patient_id is has the correct consent
+
+                    consent_bool = get_consent(patient_records, patient_id)
+
+                    if consent_bool is False:
+                        print(patient_id, "does not have acceptable consents, skipping...")
+                        continue
+                    else:
+                        print(patient_id, "contains valid consents")
+
                     # singleton tables entered as group objects
                     for table in singleton_tables:
                         parsed_record, sub_tables = list(table.values())[0](patient_records, patient_id)
@@ -121,6 +131,54 @@ def parse_enrollment(patient_records, patient_id):
         if "eventName" not in record:
             return redcap_transform(record, enrollment_table, "enrollment")
     return {}, {}
+
+def get_consent(patient_records, patient_id):
+    """
+    @param patient_records: A list of patient records.
+    @param patient_id: The requested patient_id.
+
+    Return True if the records associated with patient_id has acceptable consents.
+    Return False otherwise.
+    """
+    consent_table = {}
+    consent_table["patientId"] = patient_id
+
+    for record in patient_records:
+        if record.get("eventName") == "Enrollment":
+            consent_info = redcap_transform(record, consent_table, "consent_info")
+
+    try:
+        temp_cst_info = consent_info[0]
+        temp_patient_id = temp_cst_info["patientId"]
+    except UnboundLocalError:
+        # This indicates that this record does not have consents info
+        return False
+
+    if "cst_main_yn" in temp_cst_info:
+        if temp_cst_info["cst_main_yn"] == "true":
+            if "cst_withd_yn" not in temp_cst_info:
+                # True, as no withdrawal info available
+                return True
+            elif temp_cst_info["cst_withd_yn"] == "No":
+                # True, as it explictly indicates that patient did not withdraw
+                return True
+            else:
+                if "cst_withd_type" not in temp_cst_info:
+                    # False, as cst_withd_type is not given
+                    return False
+                elif temp_cst_info["cst_withd_type"] == "1":
+                    # TODO: Confirm which type is the valid type that permits future use
+                    # True, as withdrawn consent type 1 permits future use
+                    return True
+                else:
+                    # False, as withdraw consent type prohibits use
+                    return False
+        else:
+            # False, as cst_main_yn indicates no consent was given
+            return False
+    else:
+        # False, as cst_main_yn was not given
+        return False
 
 def parse_consent(patient_records, patient_id):
     consent_table = {}

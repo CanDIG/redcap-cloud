@@ -30,6 +30,11 @@
 "enrollment": {
 	"participantEnrollmentDate": "enrollmentApprovalDate"
 	},
+"consent_info_items": {
+	"cst_main_yn": "cst_main_yn",
+	"cst_withd_yn": "cst_withd_yn",
+	"cst_withd_type": "cst_withd_type"
+},
 "consent_items":{
 	"cst_dat": "consentDate",
 	"cst_activities": "patientConsentedTo",

@@ -14,3 +14,7 @@ Example:
 ```bash
   ./rcc_candig.sh BC abc123
 ```
+
+# Information on Consents Validation
+
+This script will only download records with valid consents. Records that do not have valid consents will be skipped and displayed as `{Patient_id} does not have acceptable consents, skipping...`. This validation process cannot be skipped.

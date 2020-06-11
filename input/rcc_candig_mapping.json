@@ -30,6 +30,11 @@
 "enrollment": {
 	"participantEnrollmentDate": "enrollmentApprovalDate"
 	},
+"consent_info_items": {
+	"cst_main_yn": "cst_main_yn",
+	"cst_withd_yn": "cst_withd_yn",
+	"cst_withd_type": "cst_withd_type"
+},
 "consent_items":{
 	"cst_dat": "consentDate",
 	"cst_activities": "patientConsentedTo",
@@ -78,7 +83,13 @@
  	"fu_ht": "height",
  	"fu_wt": "weight",
  	"fu_mrd_status": "minimalResidualDiseaseAssessment",
- 	"fu_progsite": "sitesOfAnyProgressionOrRecurrence"
+	"fu_progsite": "sitesOfAnyProgressionOrRecurrence",
+	"fu_prog_site": "siteOfRelapseOrProgression",
+	"fu_prog_yn": "intervalProgressionOrRecurrence",
+	"fu_regress_yn": "intervalRegressionOrDecreaseInDisease",
+	"fu_secondtum_class":"levelOfMalignancy",
+	"fu_secondtum_dat": "dateOfDiagnosisOfTreatmentInducedNeoplasm",
+	"fu_secondtum_icdo_t":"treatmentInducedNeoplasmSite"
  	},
  "complication_items": {
  	"fu_complic_dat": "date",
@@ -94,7 +105,32 @@
  	"mtb_dcomp": "diseaseExpressionComparator",
  	"mtb_germ_yn": "hasAGermlineVariantBeenIdentifiedByProfilingThatMayPredisposeToCancer",
  	"mtb_actionable_target_type": "actionableTargetFound",
- 	"mtb_notes": "molecularTumorBoardRecommendation"
+	"mtb_notes": "molecularTumorBoardRecommendation",
+	"mtb_exprs_action_class": "actionableExpressionOutlier",
+	"mtb_gvar_action_class": "actionableGermlineVariant",
+	"mtb_gvar_agent_class_oth": "germlineVariantsDrug",
+	"mtb_gvar_agent_drug_class": "germlineVariantsDrugClass",
+	"mtb_gvar_name": "germlineVariantsDiscussed",
+	"mtb_svar_action_class": "actionableSomaticVariants",
+	"mtb_svar_agent_class_oth": "somaticVariantsDrug",
+	"mtb_svar_agent_drug_class": "somaticVariantsDrugClass",
+	"mtb_svar_name": "somaticVariantsDiscussed",
+	"mtb_exprs_action_yn": "anyActionableExpressionOutlier",
+	"mtb_exprs_agent_class": "expressionDrug",
+	"MTB_exprs_agent_drug_class": "expressionDrugClass",
+	"mtb_exprs_analtyp": "expressionTypeOfAnalysisUsed",
+	"mtb_exprs_inform_type": "expressionTypeOfAnalysisUsed",
+	"mtb_exprs_name": "expressionAlteredGene",
+	"mtb_exprs_nonact_class": "expressionNonActionableGene",
+	"mtb_exprs_type": "expressionTypeOfAlteration",
+	"mtb_gvar_action_yn": "anyActionableGermlineVariants",
+	"mtb_gvar_analtyp": "germlineVariantsTypeOfAnalysisUsed",
+	"mtb_gvar_class": "germlineVariantsClassificationOfVariants",
+	"mtb_gvar_inform_type": "germlineVariantsTypeOfInformationUtility",
+	"mtb_svar_action_yn": "anyActionableSomaticVariants",
+	"mtb_svar_analtyp": "somaticVariantsTypeOfAnalysisUsed",
+	"mtb_svar_inform_type": "somaticVariantsTypeOfInformationUtility",
+	"mtb_svar_nonact_class": "somaticVariantsNonActionable"
  	},
  "sample_items": {
  	"bi_smpl_id": "sampleId",

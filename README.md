@@ -1,3 +1,5 @@
+This repo is no longer maintained or updated.
+
 # REDCap Cloud to CanDIG
 
 This repo contains a collection of scripts and mappings used to create .json output ready to be ingested by CanDIG scripts. The script connects to UCalgary RedCapCloud instance and pulls Profyle patient-related metadata. A Profyle study access token is required.
